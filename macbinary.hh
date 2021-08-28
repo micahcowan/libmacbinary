@@ -1,8 +1,15 @@
+#ifndef MACBINARY_HH
+#define MACBINARY_HH
+
 #include <cstdlib>
 
 class MacBinary {
     public:
-        class ResourceFork;
+        class ResourceFork {
+            friend class MacBinary;
+            protected:
+                ResourceFork() {}
+        };
 
     private:
         const unsigned char * const _data;
@@ -28,13 +35,4 @@ class MacBinary {
         virtual ~MacBinary() {}
 };
 
-class MacBinary::ResourceFork {
-    friend class MacBinary;
-    protected:
-        ResourceFork() {}
-};
-
-MacBinary::ResourceFork &MacBinary::getResourceFork() {
-    if (!_res) _res = new ResourceFork();
-    return *_res;
-}
+#endif // MACBINARY_HH

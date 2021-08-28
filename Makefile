@@ -1,7 +1,9 @@
 all: main
 
-main: main.o Makefile
-	g++ -o $@ $<
+OBJS := main.o macbinary.o
+
+main: $(OBJS) Makefile
+	g++ -o $@ $(OBJS)
 
 %.o: %.cc macbinary.hh Makefile
 	g++ -c -o $@ $<
