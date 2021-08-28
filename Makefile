@@ -1,6 +1,6 @@
 all: main
 
-OBJS := main.o macbinary.o
+OBJS := main.o macbinary.o ressectioniter.o
 
 main: $(OBJS) Makefile
 	g++ -o $@ $(OBJS)

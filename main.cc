@@ -1,6 +1,6 @@
 #include "macbinary.hh"
 
-using namespace libmb;
+using namespace libmacbinary;
 
 int main(void) {
     MacBinary mb(0, 0);

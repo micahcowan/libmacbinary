@@ -1,6 +1,8 @@
 #include "macbinary.hh"
+#include "ressectioniter.hh"
+#include "offsets.hh"
 
-using namespace libmb;
+using namespace libmacbinary;
 
 using std::uint16_t;
 using std::size_t;
@@ -11,11 +13,14 @@ MacBinary::ResourceFork & MacBinary::getResourceFork()
     std::size_t resLen;
 
     // XXX confirm we don't run past _len
-    resStart = _data + 128u + _getU16(83u);
-    resLen   = _getU16(87u);
+    resStart = _data + MB_HEADER_LENGTH + _getU16(MB_F_DATA_FORK_LENGTH);
+    resLen   = _getU16(MB_F_RES_FORK_LENGTH);
     // XXX ensure multiples of 128
 
-    if (!_res) _res = new ResourceFork(*this, resStart, resLen);
+    if (!_res) _res = new ResourceFork(this, resStart, resLen);
     return *_res;
 }
 
+ResSectionIter MacBinary::ResourceFork::getSections() {
+    return ResSectionIter(this);
+}

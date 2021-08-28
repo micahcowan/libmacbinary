@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstdint>
 
-namespace libmb {
+namespace libmacbinary {
 
 class MacBinary {
     public:
@@ -39,20 +39,22 @@ class MacBinary {
         virtual ~MacBinary() {}
 };
 
+class ResSectionIter;
+
 class MacBinary::ResourceFork {
     friend class MacBinary;
     private:
-        MacBinary                 & _mb;
+        MacBinary                  *_mb;
         const unsigned char * const _data;
         const std::size_t           _len;
     protected:
-        ResourceFork(MacBinary &mb, const unsigned char *p, std::size_t len)
+        ResourceFork(MacBinary *mb, const unsigned char *p, std::size_t len)
             : _mb(mb), _data(p), _len(len)
             {}
     public:
         virtual ~ResourceFork() {}
 
-        //virtual ResTypeIter getResTypes();
+        virtual ResSectionIter getSections();
 };
 
 }
