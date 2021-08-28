@@ -1,19 +1,18 @@
 #include <cstdlib>
 
-template <class itype = const unsigned char *> class MacBinary {
+class MacBinary {
     public:
         class ResourceFork;
 
-        typedef itype iterator_type;
-
     private:
-        const itype _begin, _end;
+        const unsigned char * const _data;
+        const std::size_t _len;
         /* XXX this should be an autoptr (or whatever modern equiv) */
         ResourceFork *_res = NULL;
 
     public:
-        MacBinary(itype begin, itype end)
-        : _begin(begin), _end(end)
+        MacBinary(const unsigned char *p, std::size_t len)
+        : _data(p), _len(len)
         { }
 
         /*
@@ -29,13 +28,13 @@ template <class itype = const unsigned char *> class MacBinary {
         virtual ~MacBinary() {}
 };
 
-template <class itype> class MacBinary<itype>::ResourceFork {
-    friend class MacBinary<itype>;
+class MacBinary::ResourceFork {
+    friend class MacBinary;
     protected:
         ResourceFork() {}
 };
 
-template <class itype> typename MacBinary<itype>::ResourceFork &MacBinary<itype>::getResourceFork() {
+MacBinary::ResourceFork &MacBinary::getResourceFork() {
     if (!_res) _res = new ResourceFork();
     return *_res;
 }
