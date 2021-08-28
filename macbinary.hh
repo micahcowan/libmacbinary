@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <cstdint>
 
+namespace libmb {
+
 class MacBinary {
     public:
         class ResourceFork;
@@ -50,7 +52,9 @@ class MacBinary::ResourceFork {
     public:
         virtual ~ResourceFork() {}
 
-
+        //virtual ResTypeIter getResTypes();
 };
+
+}
 
 #endif // MACBINARY_HH

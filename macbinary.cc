@@ -1,5 +1,7 @@
 #include "macbinary.hh"
 
+using namespace libmb;
+
 using std::uint16_t;
 using std::size_t;
 
