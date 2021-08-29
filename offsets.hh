@@ -11,11 +11,18 @@
 #define RF_F_RES_MAP_LENGTH     12u
 
 // Resource Map header
-#define RFM_F_NUM_TYPES         0u
-#define RFM_F_TYPE_LIST         2u
+//      16 bytes reserved for copy of resource header
+//      4  bytes reserved for handle of next resource map to search
+//      2  bytes reserved for file ref num
+#define RFM_F_RES_FILE_ATTRS    22u
+#define RFM_F_TYPE_LIST_OFF     24u
 
-// Resource Map entries
-#define RFME_F_TYPE_NAME        0u
-#define RFME_F_NUM_RES          4u
-#define RFME_F_REF_LIST_OFF     6u
-#define RFME_SIZE               8u
+// Reource Type List (just num)
+#define RFTL_F_NUM_TYPES        0u
+#define RFTL_F_START_OF_ENTRIES 2u
+
+// Resource Type List entries
+#define RFTLE_F_TYPE_NAME        0u
+#define RFTLE_F_NUM_RES          4u
+#define RFTLE_F_REF_LIST_OFF     6u
+#define RFTLE_SIZE               8u

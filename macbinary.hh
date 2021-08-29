@@ -51,10 +51,35 @@ class MacBinary::ResourceFork {
         ResourceFork(MacBinary *mb, const unsigned char *p, std::size_t len)
             : _mb(mb), _data(p), _len(len)
             {}
+        std::uint16_t _getU16(std::size_t loc)
+        {
+            return _data[loc] * 256 + _data[loc + 1];
+        }
+        std::uint32_t _getU32(std::size_t loc)
+        {
+            const unsigned char *u = _data + loc;
+            const unsigned char *ue = u + 4;
+            std::uint32_t val = 0;
+            for (; u != ue; ++u) {
+                val <<= 8;
+                val += *u;
+            }
+            return val;
+        }
+
+        const unsigned char *_mapStart_p();
+        const unsigned char *_tlStart_p();
     public:
         virtual ~ResourceFork() {}
 
-        virtual ResSectionIter getSections();
+        ResSectionIter getSections();
+        ResSectionIter getSectionsEnd();
+
+        // Debug utils, public
+        std::size_t _start() { return _data - _mb->_data; }
+        std::size_t _mapStart() { return _mapStart_p() - _mb->_data; }
+        std::size_t _tlStart()  { return _tlStart_p()  - _mb->_data; }
+        std::size_t _numTypes();
 };
 
 }
