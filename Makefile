@@ -1,12 +1,14 @@
 all: main
 
+CXX  := g++
+CXXFLAGS = -std=c++11
 OBJS := main.o macbinary.o ressectioniter.o
 
 main: $(OBJS) Makefile
-	g++ -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
 %.o: %.cc macbinary.hh Makefile
-	g++ -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
