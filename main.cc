@@ -183,13 +183,11 @@ void printResFork(unsigned char * mem, size_t sz)
 
     // Prove we can find some specific resources
     Resource thing = rf.findResource("CODE", 0);
-#if 0
     cout << "CODE 0 contents:" << endl;
     for (auto di = thing.dataStart(), de = thing.dataEnd(); di != de; ++di) {
         hf.printByte(*di);
     }
     hf.flush();
-#endif
 }
 
 int main(int argc, char **argv) {

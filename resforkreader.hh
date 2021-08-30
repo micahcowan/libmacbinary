@@ -35,6 +35,10 @@ class ResForkReader {
         const unsigned char *_start() const { return _data; }
         const unsigned char *_appDataStart() const { return _data + RF_APP_DATA_OFF; }
         const unsigned char *_appDataEnd() const { return _appDataStart() + RF_APP_DATA_LENGTH; }
+        const unsigned char *_resDataStart() const
+        {
+            return _data + get_be_u32(_data + RF_F_RES_DATA_OFF);
+        }
         const unsigned char *_mapStart() const
         {
             return _data + get_be_u32(&_data[RF_F_RES_MAP_OFF]);
@@ -190,6 +194,11 @@ class Resource
     private:
         const ResForkReader *_rf;
         const unsigned char *_data;
+
+        const unsigned char *_dataEntry() const
+        {
+            return _rf->_resDataStart() + get_be_u24(_data + RF_RES_F_DATA_LEN_OFF);
+        }
     protected:
         Resource(const ResForkReader *rf, const unsigned char *p)
             : _rf(rf), _data(p)
@@ -208,6 +217,16 @@ class Resource
             const unsigned char *n = _rf->_nameListStart() + nameOff;
             // First byte is length, and then the string
             return std::string((const char *)n+1, *n);
+        }
+
+        const unsigned char *dataStart() const
+        {
+            return _dataEntry() + RF_DATA_F_START;
+        }
+
+        const unsigned char *dataEnd() const
+        {
+            return dataStart() + get_be_u32(_dataEntry() + RF_DATA_F_LENGTH);
         }
 };
 
