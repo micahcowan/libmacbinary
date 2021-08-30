@@ -9,7 +9,6 @@
 #include <sys/stat.h>
 
 #include "macbinary.hh"
-#include "ressectioniter.hh"
 #include "resforkreader.hh"
 
 using namespace libmacbinary;

@@ -1,18 +1,18 @@
-#ifndef LIBMB_RESSECTIONITER_HH
-#define LIBMB_RESSECTIONITER_HH
+#ifndef LIBMB_RESTYPELISTIONITER_HH
+#define LIBMB_RESTYPELISTITER_HH
 
 #include <iterator>
 #include <string>
 
-#include "ressection.hh"
+#include "restypeentry.hh"
 #include "offsets.hh"
 
 namespace libmacbinary {
 
 class ResForkReader;
 
-class ResSectionIter :
-    std::iterator<std::forward_iterator_tag, ResSection>
+class ResTypeListIterator :
+    std::iterator<std::forward_iterator_tag, ResTypeEntry>
 
 {
     friend class ResForkReader;
@@ -21,39 +21,38 @@ class ResSectionIter :
         ResForkReader *_rf;
         const unsigned char *_cur = NULL;
     protected:
-        ResSectionIter(ResForkReader *rf, const unsigned char *start)
+        ResTypeListIterator(ResForkReader *rf, const unsigned char *start)
             : _rf(rf), _cur(start)
             { }
     public:
-        ResSectionIter()
+        ResTypeListIterator()
             : _rf((ResForkReader *)(NULL))
             { }
-        ~ResSectionIter() { }
+        ~ResTypeListIterator() { }
 
-        bool operator==(ResSectionIter &other)
+        bool operator==(ResTypeListIterator &other)
         {
             return
                    (_rf == other._rf)
                 && (_cur == other._cur);
         }
 
-        bool operator!=(ResSectionIter &other)
+        bool operator!=(ResTypeListIterator &other)
         {
             return !(*this == other);
         }
 
-        ResSectionIter operator++()
+        ResTypeListIterator operator++()
         {
             _cur += RFTLE_SIZE;
             return *this;
         }
 
-        ResSection operator*() {
-
-            return std::string((const char *)_cur, 4);
+        const ResTypeEntry operator*() {
+            return ResTypeEntry(this, _cur);
         }
 };
 
 }
 
-#endif // LIBMB_RESSECTIONITER_HH
+#endif // LIBMB_RESTYPELISTITER_HH

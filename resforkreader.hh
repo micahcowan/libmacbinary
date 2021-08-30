@@ -3,12 +3,12 @@
 
 #include <cstdlib>
 
-#include "ressectioniter.hh"
+#include "restypelistiter.hh"
 #include "bigendian.hh"
 
 namespace libmacbinary {
 
-class ResSectionIter;
+class ResTypeListIterator;
 
 class ResForkReader {
     friend class MacBinary;
@@ -22,14 +22,14 @@ class ResForkReader {
             {}
         virtual ~ResForkReader() {}
 
-        ResSectionIter getSections()
+        ResTypeListIterator getSections()
         {
-            return ResSectionIter(this, _typeListEntriesStart());
+            return ResTypeListIterator(this, _typeListEntriesStart());
         }
 
-        ResSectionIter getSectionsEnd()
+        ResTypeListIterator getSectionsEnd()
         {
-            return ResSectionIter(this, _typeListEntriesEnd());
+            return ResTypeListIterator(this, _typeListEntriesEnd());
         }
 
         // Various useful locations in a resource fork

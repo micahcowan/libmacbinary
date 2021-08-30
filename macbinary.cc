@@ -1,5 +1,4 @@
 #include "macbinary.hh"
-#include "ressectioniter.hh"
 #include "offsets.hh"
 #include "bigendian.hh"
 
