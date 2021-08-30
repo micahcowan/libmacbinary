@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iomanip>
+
 #include <cstring>
 #include <cerrno>
 #include <cstdlib>
@@ -20,6 +22,8 @@ using std::hex;
 using std::dec;
 using std::size_t;
 using std::string;
+using std::setfill;
+using std::setw;
 
 void printError(const string &msg)
 {
@@ -79,8 +83,15 @@ void printResFork(unsigned char * mem, size_t sz)
     appEnd  = rf._appDataEnd();
     cout << "Application data in resource fork:" << endl;
     cout << hex;
-    for (const unsigned char *p = app; p != appEnd; ++p) {
-        cout << ' ' << (int)*p;
+    const unsigned char *p;
+    unsigned int c;
+    for (p = app, c = 0;
+         p != appEnd;
+         ++p, ++c) {
+
+        if (c != 0 && c % 8 == 0) cout << endl;
+        if (c % 2 == 0) cout << ' ';
+        cout << setfill('0') << setw(2) << (int)*p;
     }
     cout << endl << endl;
 
