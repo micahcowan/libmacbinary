@@ -1,7 +1,7 @@
 all: main
 
 CXX  := g++
-CXXFLAGS = -std=c++11
+#CXXFLAGS = -std=c++11
 OBJS := main.o macbinary.o
 SRCS := $(patsubst %.o,%.cc,$(OBJS))
 
