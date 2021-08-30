@@ -57,7 +57,7 @@ class HexFormatter
     public:
         HexFormatter(
             size_t groupN = 2,
-            size_t lineN = 8,
+            size_t lineN = 16,
             std::ostream &out = cout
             ) : groupN(groupN), lineN(lineN), out(out)
         {
@@ -171,7 +171,11 @@ void printResFork(unsigned char * mem, size_t sz)
         auto resEnd = e.getResourcesEnd();
         for (auto j = e.getResources(); j != resEnd; ++j)
         {
-            cout << ' ' << (*j).id();
+            auto res = (*j);
+            cout << ' ' << res.id();
+            if (!res.name().empty()) {
+                cout << ':' << res.name();
+            }
         }
         cout << endl;
     }

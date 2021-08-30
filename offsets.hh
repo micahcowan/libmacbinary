@@ -19,6 +19,7 @@
 //      2  bytes reserved for file ref num
 #define RFM_F_RES_FILE_ATTRS    22u
 #define RFM_F_TYPE_LIST_OFF     24u
+#define RFM_F_NAME_LIST_OFF     26u
 
 // Reource Type List (just num)
 #define RFTL_F_NUM_TYPES        0u

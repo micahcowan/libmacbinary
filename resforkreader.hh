@@ -39,7 +39,7 @@ class ResForkReader {
         }
         const unsigned char *_typeList() const
         {
-            return _mapStart() + get_be_u16(&(_mapStart())[RFM_F_TYPE_LIST_OFF]);
+            return _mapStart() + get_be_u16(_mapStart() + RFM_F_TYPE_LIST_OFF);
         }
         const unsigned char *_typeListEntriesStart() const
         {
@@ -52,6 +52,10 @@ class ResForkReader {
         std::size_t numTypes() const
         {
             return get_be_u16(_typeList() + RFTL_F_NUM_TYPES) + 1;
+        }
+        const unsigned char *_nameListStart() const
+        {
+            return _mapStart() + get_be_u16(_mapStart() + RFM_F_NAME_LIST_OFF);
         }
 };
 
@@ -188,7 +192,17 @@ class Resource
     public:
         std::uint16_t id() const
         {
-            return get_be_u16(_data);
+            return get_be_u16(_data + RF_RES_F_ID);
+        }
+
+        const std::string name() const
+        {
+            std::int16_t nameOff = get_be_i16(_data + RF_RES_F_NAME_OFF);
+            if (nameOff == -1)
+                return std::string("");
+            const unsigned char *n = _rf->_nameListStart() + nameOff;
+            // First byte is length, and then the string
+            return std::string((const char *)n+1, *n);
         }
 };
 
