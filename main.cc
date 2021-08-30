@@ -25,6 +25,56 @@ using std::string;
 using std::setfill;
 using std::setw;
 
+class HexFormatter
+{
+    private:
+        size_t count = 0;
+        const size_t groupN;
+        const size_t lineN;
+        unsigned char *buf;
+        std::ostream &out;
+
+        void dumpBuffer(void)
+        {
+
+        }
+    public:
+        HexFormatter(
+            size_t groupN = 2,
+            size_t lineN = 8,
+            std::ostream &out = cout
+            ) : groupN(groupN), lineN(lineN), out(out)
+        {
+            buf = new unsigned char[lineN];
+        }
+
+        virtual ~HexFormatter()
+        {
+            flush();
+            delete[] buf;
+        }
+
+        virtual void printByte(unsigned char byte)
+        {
+            if (count % groupN == 0) cout << ' ';
+
+            out << hex << setfill('0') << setw(2) << (int)byte;
+            buf[count] = byte;
+            ++count;
+
+            if (count == lineN) flush();
+        }
+
+        virtual void flush(void)
+        {
+            if (count != 0) {
+                dumpBuffer();
+                cout << endl;
+            }
+            count = 0;
+        }
+};
+
 void printError(const string &msg)
 {
     cerr << msg << ": " << strerror(errno) << endl;
@@ -82,18 +132,13 @@ void printResFork(unsigned char * mem, size_t sz)
     app     = rf._appDataStart();
     appEnd  = rf._appDataEnd();
     cout << "Application data in resource fork:" << endl;
-    cout << hex;
+    HexFormatter hf;
     const unsigned char *p;
-    unsigned int c;
-    for (p = app, c = 0;
-         p != appEnd;
-         ++p, ++c) {
-
-        if (c != 0 && c % 8 == 0) cout << endl;
-        if (c % 2 == 0) cout << ' ';
-        cout << setfill('0') << setw(2) << (int)*p;
+    for (p = app; p != appEnd; ++p) {
+        hf.printByte(*p);
     }
-    cout << endl << endl;
+    hf.flush();
+    cout << endl;
 
     cout << "Start of res map: " << hex << (rf._mapStart() - mem) << endl;
     cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
