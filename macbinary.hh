@@ -23,7 +23,7 @@ class MacBinary {
         /*
         const unsigned char *getDataFork(const unsigned char **end);
         */
-        const unsigned char *getResourceFork(const unsigned char **end);
+        const unsigned char *getResourceFork (const unsigned char **end) const;
 };
 
 }

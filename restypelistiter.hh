@@ -18,26 +18,26 @@ class ResTypeListIterator :
     friend class ResForkReader;
 
     private:
-        ResForkReader *_rf;
+        const ResForkReader *_rf;
         const unsigned char *_cur = NULL;
     protected:
-        ResTypeListIterator(ResForkReader *rf, const unsigned char *start)
+        ResTypeListIterator(const ResForkReader *rf, const unsigned char *start)
             : _rf(rf), _cur(start)
             { }
     public:
         ResTypeListIterator()
-            : _rf((ResForkReader *)(NULL))
+            : _rf((const ResForkReader *)(NULL))
             { }
         ~ResTypeListIterator() { }
 
-        bool operator==(ResTypeListIterator &other)
+        bool operator== (const ResTypeListIterator &other) const
         {
             return
                    (_rf == other._rf)
                 && (_cur == other._cur);
         }
 
-        bool operator!=(ResTypeListIterator &other)
+        bool operator!= (const ResTypeListIterator &other) const
         {
             return !(*this == other);
         }
@@ -48,7 +48,7 @@ class ResTypeListIterator :
             return *this;
         }
 
-        const ResTypeEntry operator*() {
+        const ResTypeEntry operator*() const {
             return ResTypeEntry(this, _cur);
         }
 };

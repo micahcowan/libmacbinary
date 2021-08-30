@@ -7,7 +7,7 @@ using namespace libmacbinary;
 using std::uint16_t;
 using std::size_t;
 
-const unsigned char * MacBinary::getResourceFork(const unsigned char **end)
+const unsigned char * MacBinary::getResourceFork(const unsigned char **end) const
 {
     const unsigned char *resStart;
     std::size_t resLen;

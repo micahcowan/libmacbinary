@@ -65,10 +65,10 @@ void printResFork(unsigned char * mem, size_t sz)
 {
     cout << "Start of file in memory: " << (void*)mem << endl;
 
-    MacBinary mb(mem, sz);
+    const MacBinary mb(mem, sz);
     const unsigned char *rfs, *rfe;
     rfs = mb.getResourceFork(&rfe);
-    ResForkReader rf(rfs, rfe);
+    const ResForkReader rf(rfs, rfe);
 
     cout << "Start of res fork: " << hex << (rf._start() - mem) << endl;
     cout << "Start of res map: " << hex << (rf._mapStart() - mem) << endl;

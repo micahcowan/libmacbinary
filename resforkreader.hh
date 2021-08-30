@@ -11,7 +11,6 @@ namespace libmacbinary {
 class ResTypeListIterator;
 
 class ResForkReader {
-    friend class MacBinary;
     private:
         const unsigned char * const _data;
         const unsigned char * const _dataEnd;
@@ -22,35 +21,35 @@ class ResForkReader {
             {}
         virtual ~ResForkReader() {}
 
-        ResTypeListIterator getSections()
+        ResTypeListIterator getSections() const
         {
             return ResTypeListIterator(this, _typeListEntriesStart());
         }
 
-        ResTypeListIterator getSectionsEnd()
+        ResTypeListIterator getSectionsEnd() const
         {
             return ResTypeListIterator(this, _typeListEntriesEnd());
         }
 
         // Various useful locations in a resource fork
-        const unsigned char *_start() { return _data; }
-        const unsigned char *_mapStart()
+        const unsigned char *_start() const { return _data; }
+        const unsigned char *_mapStart() const
         {
             return _data + get_be_u32(&_data[RF_F_RES_MAP_OFF]);
         }
-        const unsigned char *_typeList()
+        const unsigned char *_typeList() const
         {
             return _mapStart() + get_be_u16(&(_mapStart())[RFM_F_TYPE_LIST_OFF]);
         }
-        const unsigned char *_typeListEntriesStart()
+        const unsigned char *_typeListEntriesStart() const
         {
             return _typeList() + RFTL_F_START_OF_ENTRIES;
         }
-        const unsigned char *_typeListEntriesEnd()
+        const unsigned char *_typeListEntriesEnd() const
         {
             return _typeListEntriesStart() + (_numTypes() * RFTLE_SIZE);
         }
-        std::size_t _numTypes()
+        std::size_t _numTypes() const
         {
             return get_be_u16(_typeList() + RFTL_F_NUM_TYPES) + 1;
         }

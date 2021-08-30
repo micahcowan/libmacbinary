@@ -13,12 +13,12 @@ class ResTypeEntry
     friend class ResTypeListIterator;
 
     private:
-        ResTypeListIterator *_iter;
+        const ResTypeListIterator *_iter;
         const unsigned char *_entry;
         const std::string _tid;
 
     protected:
-        ResTypeEntry(ResTypeListIterator *iter, const unsigned char *p)
+        ResTypeEntry(const ResTypeListIterator *iter, const unsigned char *p)
             : _iter(iter), _entry(p), _tid((const char *)p, 4)
         {
         }
