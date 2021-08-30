@@ -2,7 +2,7 @@ all: main
 
 CXX  := g++
 #CXXFLAGS = -std=c++11
-OBJS := main.o macbinary.o
+OBJS := main.o
 SRCS := $(patsubst %.o,%.cc,$(OBJS))
 
 main: $(OBJS) Makefile
