@@ -8,7 +8,7 @@ SRCS := $(patsubst %.o,%.cc,$(OBJS))
 main: $(OBJS) Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-$(OBJS): macbinary.hh restypelistiter.hh offsets.hh bigendian.hh resforkreader.hh restypeentry.hh Makefile
+$(OBJS): Makefile macbinary.hh offsets.hh bigendian.hh resforkreader.hh
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
