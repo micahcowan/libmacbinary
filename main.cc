@@ -73,11 +73,13 @@ void printResFork(unsigned char * mem, size_t sz)
     cout << "Start of res fork: " << hex << (rf._start() - mem) << endl;
     cout << "Start of res map: " << hex << (rf._mapStart() - mem) << endl;
     cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
-    cout << dec << rf._numTypes() << " items in list:" << endl;
+    cout << dec << rf.numTypes() << " items in list:" << endl;
 
     auto end = rf.getTypeListEnd();
     for (auto i = rf.getTypeList(); i != end; ++i) {
-        cout << "  " << *i << endl;
+        ResTypeEntry e = *i;
+        cout << "  " << e << " (" << dec << e.numResources() << ')' << endl;
+        cout << "    reslist starts " << hex << (e._resList() - mem) << ':' << endl;
     }
     cout << endl;
 }

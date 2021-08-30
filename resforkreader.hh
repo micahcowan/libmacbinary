@@ -44,13 +44,15 @@ class ResForkReader {
         }
         const unsigned char *_typeListEntriesEnd() const
         {
-            return _typeListEntriesStart() + (_numTypes() * RFTLE_SIZE);
+            return _typeListEntriesStart() + (numTypes() * RFTLE_SIZE);
         }
-        std::size_t _numTypes() const
+        std::size_t numTypes() const
         {
             return get_be_u16(_typeList() + RFTL_F_NUM_TYPES) + 1;
         }
 };
+
+class ResourceIterator;
 
 class ResTypeEntry
 {
@@ -68,26 +70,24 @@ class ResTypeEntry
         }
 
     public:
+        inline const ResForkReader   &getReader() const;
 
         // raw memory accesses
         const unsigned char *_entry() const { return _data; }
-        const unsigned char *_resList() const;
-        std::size_t _numRes() const
+        const unsigned char *_resList() const
+        {
+            return getReader()._typeList()
+                + get_be_u16(&_data[RFTLE_F_REF_LIST_OFF]);
+        }
+
+        std::size_t numResources() const
         {
             return get_be_u16(&_data[RFTLE_F_NUM_RES]) + 1;
         }
 
         const std::string &typeId () const { return _tid; }
-#if 0
-        ResourceIterator &getResourceList() const
-        {
-            return ResourceIterator(this, 
-        }
-
-        ResourceIterator &getResourceListEnd() const
-        {
-        }
-#endif
+        inline ResourceIterator &getResourceList() const;
+        inline ResourceIterator &getResourceListEnd() const;
 };
 
 class ResTypeListIterator :
@@ -108,6 +108,11 @@ class ResTypeListIterator :
             : _rf((const ResForkReader *)(NULL))
             { }
         ~ResTypeListIterator() { }
+
+        const ResForkReader &getReader() const
+        {
+            return *_rf;
+        }
 
         bool operator== (const ResTypeListIterator &other) const
         {
@@ -132,6 +137,8 @@ class ResTypeListIterator :
         }
 };
 
+// Util fns
+
 std::ostream &operator<<(std::ostream &out, const ResTypeEntry &re)
 {
     return out << re.typeId();
@@ -139,6 +146,7 @@ std::ostream &operator<<(std::ostream &out, const ResTypeEntry &re)
 
 // Inter-dependent member function definitions
 
+//   ResForkReader
 inline ResTypeListIterator ResForkReader::getTypeList() const
 {
     return ResTypeListIterator(this, _typeListEntriesStart());
@@ -148,6 +156,23 @@ inline ResTypeListIterator ResForkReader::getTypeListEnd() const
 {
     return ResTypeListIterator(this, _typeListEntriesEnd());
 }
+
+//    ResTypeEntry
+inline const ResForkReader &ResTypeEntry::getReader() const
+{
+    return _iter->getReader();
+}
+
+#if 0
+inline ResourceIterator &ResTypeEntry::getResourceList() const
+{
+    return ResourceIterator(this, 
+}
+
+inline ResourceIterator &ResTypeEntry::getResourceListEnd() const
+{
+}
+#endif
 
 
 } // libmacbinary
