@@ -25,6 +25,19 @@ using std::string;
 using std::setfill;
 using std::setw;
 
+inline char saneChar(unsigned char c)
+{
+    // Assumes ASCII-compatible
+    if (c >= 0x20 /* space */
+        && c < 0x7F /* DEL */) {
+
+        return (char)c;
+    }
+    else {
+        return '?';
+    }
+}
+
 class HexFormatter
 {
     private:
@@ -36,7 +49,10 @@ class HexFormatter
 
         void dumpBuffer(void)
         {
-
+            cout << string(2*groupN + 1, ' ');
+            for (size_t i = 0; i != count; ++i) {
+                out << saneChar(buf[i]);
+            }
         }
     public:
         HexFormatter(
