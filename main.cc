@@ -76,10 +76,19 @@ void printResFork(unsigned char * mem, size_t sz)
     cout << dec << rf.numTypes() << " items in list:" << endl;
 
     auto end = rf.getTypeListEnd();
+    // iterate over resource types
     for (auto i = rf.getTypeList(); i != end; ++i) {
         ResTypeEntry e = *i;
         cout << "  " << e << " (" << dec << e.numResources() << ')' << endl;
-        cout << "    reslist starts " << hex << (e._resList() - mem) << ':' << endl;
+        cout << "    reslist starts " << hex << (e._resList() - mem) << ':';
+        cout << dec;
+        // iterate over resources
+        auto resEnd = e.getResourcesEnd();
+        for (auto j = e.getResources(); j != resEnd; ++j)
+        {
+            cout << ' ' << (*j).id();
+        }
+        cout << endl;
     }
     cout << endl;
 }

@@ -6,6 +6,7 @@
 #include <ostream>
 
 #include <cstdlib>
+#include <cstdint>
 
 #include "offsets.hh"
 #include "bigendian.hh"
@@ -59,13 +60,13 @@ class ResTypeEntry
     friend class ResTypeListIterator;
 
     private:
-        const ResTypeListIterator *_iter;
+        const ResForkReader *_rf;
         const unsigned char *_data;
         const std::string _tid;
 
     protected:
-        ResTypeEntry(const ResTypeListIterator *iter, const unsigned char *p)
-            : _iter(iter), _data(p), _tid((const char *)p, 4)
+        ResTypeEntry(const ResForkReader *rf, const unsigned char *p)
+            : _rf(rf), _data(p), _tid((const char *)p, 4)
         {
         }
 
@@ -86,8 +87,8 @@ class ResTypeEntry
         }
 
         const std::string &typeId () const { return _tid; }
-        inline ResourceIterator &getResourceList() const;
-        inline ResourceIterator &getResourceListEnd() const;
+        inline ResourceIterator getResources() const;
+        inline ResourceIterator getResourcesEnd() const;
 };
 
 class ResTypeListIterator :
@@ -133,7 +134,59 @@ class ResTypeListIterator :
         }
 
         const ResTypeEntry operator*() const {
-            return ResTypeEntry(this, _cur);
+            return ResTypeEntry(_rf, _cur);
+        }
+};
+
+class Resource;
+
+class ResourceIterator :
+    std::iterator<std::forward_iterator_tag, Resource>
+{
+    friend class ResTypeEntry;
+
+    private:
+        const ResForkReader *_rf;
+        const unsigned char *_cur;
+    protected:
+        ResourceIterator(const ResForkReader *rf, const unsigned char *p)
+            : _rf(rf), _cur(p)
+            {}
+
+    public:
+        bool operator== (const ResourceIterator &other) const
+        {
+            return (_rf == other._rf) && (_cur == other._cur);
+        }
+
+        bool operator!= (const ResourceIterator &other) const
+        {
+            return !(*this == other);
+        }
+
+        ResourceIterator operator++()
+        {
+            _cur += RF_RES_SIZE;
+            return *this;
+        }
+
+        inline const Resource operator*() const;
+};
+
+class Resource
+{
+    friend class ResourceIterator;
+    private:
+        const ResForkReader *_rf;
+        const unsigned char *_data;
+    protected:
+        Resource(const ResForkReader *rf, const unsigned char *p)
+            : _rf(rf), _data(p)
+        { }
+    public:
+        std::uint16_t id() const
+        {
+            return get_be_u16(_data);
         }
 };
 
@@ -160,20 +213,24 @@ inline ResTypeListIterator ResForkReader::getTypeListEnd() const
 //    ResTypeEntry
 inline const ResForkReader &ResTypeEntry::getReader() const
 {
-    return _iter->getReader();
+    return *_rf;
 }
 
-#if 0
-inline ResourceIterator &ResTypeEntry::getResourceList() const
+inline ResourceIterator ResTypeEntry::getResources() const
 {
-    return ResourceIterator(this, 
+    return ResourceIterator(_rf, _resList());
 }
 
-inline ResourceIterator &ResTypeEntry::getResourceListEnd() const
+inline ResourceIterator ResTypeEntry::getResourcesEnd() const
 {
+    return ResourceIterator(_rf, _resList() + (numResources() * RF_RES_SIZE));
 }
-#endif
 
+//    ResourceIterator
+inline const Resource ResourceIterator::operator*() const
+{
+    return Resource(_rf, _cur);
+}
 
 } // libmacbinary
 

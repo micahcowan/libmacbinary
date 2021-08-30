@@ -26,3 +26,11 @@
 #define RFTLE_F_NUM_RES          4u
 #define RFTLE_F_REF_LIST_OFF     6u
 #define RFTLE_SIZE               8u
+
+// Resource references
+#define RF_RES_F_ID             0u
+#define RF_RES_F_NAME_OFF       2u
+#define RF_RES_F_ATTR           4u
+#define RF_RES_F_DATA_LEN_OFF   5u  // 3 bytes! for an offset!
+//      4 bytes reserved for handle to resource
+#define RF_RES_SIZE             12u
