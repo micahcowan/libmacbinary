@@ -1,6 +1,7 @@
 #ifndef LIBMB_RESFORKREADER_HH
 #define LIBMB_RESFORKREADER_HH
 
+#include <algorithm>
 #include <iterator>
 #include <string>
 #include <ostream>
@@ -14,6 +15,7 @@
 namespace libmacbinary {
 
 class ResTypeListIterator;
+class Resource;
 
 class ResForkReader {
     private:
@@ -26,8 +28,8 @@ class ResForkReader {
             {}
         virtual ~ResForkReader() {}
 
-        inline ResTypeListIterator getTypeList() const;
-        inline ResTypeListIterator getTypeListEnd() const;
+        inline ResTypeListIterator getTypes() const;
+        inline ResTypeListIterator getTypesEnd() const;
 
         // Various useful locations in a resource fork
         const unsigned char *_start() const { return _data; }
@@ -57,6 +59,8 @@ class ResForkReader {
         {
             return _mapStart() + get_be_u16(_mapStart() + RFM_F_NAME_LIST_OFF);
         }
+
+        inline const Resource findResource(const std::string &type, std::int16_t id) const;
 };
 
 class ResourceIterator;
@@ -98,7 +102,7 @@ class ResTypeEntry
 };
 
 class ResTypeListIterator :
-    std::iterator<std::forward_iterator_tag, ResTypeEntry>
+    public std::iterator<std::forward_iterator_tag, ResTypeEntry>
 
 {
     friend class ResForkReader;
@@ -142,12 +146,13 @@ class ResTypeListIterator :
         const ResTypeEntry operator*() const {
             return ResTypeEntry(_rf, _cur);
         }
+
 };
 
 class Resource;
 
 class ResourceIterator :
-    std::iterator<std::forward_iterator_tag, Resource>
+    public std::iterator<std::forward_iterator_tag, Resource>
 {
     friend class ResTypeEntry;
 
@@ -216,14 +221,38 @@ std::ostream &operator<<(std::ostream &out, const ResTypeEntry &re)
 // Inter-dependent member function definitions
 
 //   ResForkReader
-inline ResTypeListIterator ResForkReader::getTypeList() const
+inline ResTypeListIterator ResForkReader::getTypes() const
 {
     return ResTypeListIterator(this, _typeListEntriesStart());
 }
 
-inline ResTypeListIterator ResForkReader::getTypeListEnd() const
+inline ResTypeListIterator ResForkReader::getTypesEnd() const
 {
     return ResTypeListIterator(this, _typeListEntriesEnd());
+}
+
+inline const Resource ResForkReader::findResource(const std::string &type, std::int16_t id) const
+{
+    ResTypeListIterator ts = getTypes();
+    ResTypeListIterator te = getTypesEnd();
+
+    ResTypeListIterator i = std::find_if(ts, te,
+        [type](const ResTypeEntry &thing){ return thing.typeId() == type; });
+    if (i == te) {
+        throw "not found.";
+    }
+
+    ResTypeEntry entry = (*i);
+
+    ResourceIterator rs = entry.getResources();
+    ResourceIterator re = entry.getResourcesEnd();
+    ResourceIterator j = std::find_if(rs, re,
+        [id](const Resource &thing){ return thing.id() == id; });
+    if (j == re) {
+        throw "not found.";
+    }
+
+    return (*j);
 }
 
 //    ResTypeEntry

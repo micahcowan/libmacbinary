@@ -160,9 +160,9 @@ void printResFork(unsigned char * mem, size_t sz)
     cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
     cout << dec << rf.numTypes() << " items in list:" << endl;
 
-    auto end = rf.getTypeListEnd();
+    auto end = rf.getTypesEnd();
     // iterate over resource types
-    for (auto i = rf.getTypeList(); i != end; ++i) {
+    for (auto i = rf.getTypes(); i != end; ++i) {
         ResTypeEntry e = *i;
         cout << "  " << e << " (" << dec << e.numResources() << ')' << endl;
         cout << "    reslist starts " << hex << (e._resList() - mem) << ':';
@@ -180,6 +180,16 @@ void printResFork(unsigned char * mem, size_t sz)
         cout << endl;
     }
     cout << endl;
+
+    // Prove we can find some specific resources
+    Resource thing = rf.findResource("CODE", 0);
+#if 0
+    cout << "CODE 0 contents:" << endl;
+    for (auto di = thing.dataStart(), de = thing.dataEnd(); di != de; ++di) {
+        hf.printByte(*di);
+    }
+    hf.flush();
+#endif
 }
 
 int main(int argc, char **argv) {
