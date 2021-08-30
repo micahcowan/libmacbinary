@@ -3,11 +3,14 @@ all: main
 CXX  := g++
 CXXFLAGS = -std=c++11
 OBJS := main.o macbinary.o
+SRCS := $(patsubst %.o,%.cc,$(OBJS))
 
 main: $(OBJS) Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-%.o: %.cc macbinary.hh restypelistiter.hh offsets.hh bigendian.hh resforkreader.hh restypeentry.h Makefile
+$(OBJS): macbinary.hh restypelistiter.hh offsets.hh bigendian.hh resforkreader.hh restypeentry.hh Makefile
+
+%.o: %.cc
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 .PHONY: clean

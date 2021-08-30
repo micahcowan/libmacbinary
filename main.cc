@@ -75,8 +75,8 @@ void printResFork(unsigned char * mem, size_t sz)
     cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
     cout << dec << rf._numTypes() << " items in list:" << endl;
 
-    auto end = rf.getSectionsEnd();
-    for (auto i = rf.getSections(); i != end; ++i) {
+    auto end = rf.getTypeListEnd();
+    for (auto i = rf.getTypeList(); i != end; ++i) {
         cout << "  " << *i << endl;
     }
     cout << endl;

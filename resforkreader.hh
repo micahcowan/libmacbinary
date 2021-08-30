@@ -21,12 +21,12 @@ class ResForkReader {
             {}
         virtual ~ResForkReader() {}
 
-        ResTypeListIterator getSections() const
+        ResTypeListIterator getTypeList() const
         {
             return ResTypeListIterator(this, _typeListEntriesStart());
         }
 
-        ResTypeListIterator getSectionsEnd() const
+        ResTypeListIterator getTypeListEnd() const
         {
             return ResTypeListIterator(this, _typeListEntriesEnd());
         }
