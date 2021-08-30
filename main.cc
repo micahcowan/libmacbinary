@@ -10,6 +10,7 @@
 
 #include "macbinary.hh"
 #include "ressectioniter.hh"
+#include "resforkreader.hh"
 
 using namespace libmacbinary;
 
@@ -66,10 +67,13 @@ void printResFork(unsigned char * mem, size_t sz)
     cout << "Start of file in memory: " << (void*)mem << endl;
 
     MacBinary mb(mem, sz);
-    MacBinary::ResourceFork &rf = mb.getResourceFork();
-    cout << "Start of res fork: " << hex << rf._start() << endl;
-    cout << "Start of res map: " << hex << rf._mapStart() << endl;
-    cout << "Start of res type list: " << hex << rf._tlStart() << endl;
+    const unsigned char *rfs, *rfe;
+    rfs = mb.getResourceFork(&rfe);
+    ResForkReader rf(rfs, rfe);
+
+    cout << "Start of res fork: " << hex << (rf._start() - mem) << endl;
+    cout << "Start of res map: " << hex << (rf._mapStart() - mem) << endl;
+    cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
     cout << dec << rf._numTypes() << " items in list:" << endl;
 
     auto end = rf.getSectionsEnd();

@@ -1,31 +1,32 @@
-#ifndef RESSECTIONITER_HH
-#define RESSECTIONITER_HH
+#ifndef LIBMB_RESSECTIONITER_HH
+#define LIBMB_RESSECTIONITER_HH
 
 #include <iterator>
 #include <string>
 
-#include "macbinary.hh"
 #include "ressection.hh"
 #include "offsets.hh"
 
 namespace libmacbinary {
 
+class ResForkReader;
+
 class ResSectionIter :
     std::iterator<std::forward_iterator_tag, ResSection>
 
 {
-    friend class MacBinary::ResourceFork;
+    friend class ResForkReader;
 
     private:
-        MacBinary::ResourceFork *_rf;
+        ResForkReader *_rf;
         const unsigned char *_cur = NULL;
     protected:
-        ResSectionIter(MacBinary::ResourceFork *rf, const unsigned char *start)
+        ResSectionIter(ResForkReader *rf, const unsigned char *start)
             : _rf(rf), _cur(start)
             { }
     public:
         ResSectionIter()
-            : _rf((MacBinary::ResourceFork *)(NULL))
+            : _rf((ResForkReader *)(NULL))
             { }
         ~ResSectionIter() { }
 
@@ -36,12 +37,10 @@ class ResSectionIter :
                 && (_cur == other._cur);
         }
 
-#if 1
         bool operator!=(ResSectionIter &other)
         {
             return !(*this == other);
         }
-#endif
 
         ResSectionIter operator++()
         {
@@ -57,4 +56,4 @@ class ResSectionIter :
 
 }
 
-#endif // RESSECTIONITER_HH
+#endif // LIBMB_RESSECTIONITER_HH

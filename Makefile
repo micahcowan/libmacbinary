@@ -7,7 +7,7 @@ OBJS := main.o macbinary.o ressectioniter.o
 main: $(OBJS) Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-%.o: %.cc macbinary.hh ressectioniter.hh offsets.hh Makefile
+%.o: %.cc macbinary.hh ressectioniter.hh offsets.hh bigendian.hh resforkreader.hh Makefile
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 .PHONY: clean
