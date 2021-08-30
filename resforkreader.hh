@@ -190,9 +190,9 @@ class Resource
             : _rf(rf), _data(p)
         { }
     public:
-        std::uint16_t id() const
+        std::int16_t id() const
         {
-            return get_be_u16(_data + RF_RES_F_ID);
+            return get_be_i16(_data + RF_RES_F_ID);
         }
 
         const std::string name() const
