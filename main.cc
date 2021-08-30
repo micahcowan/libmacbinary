@@ -34,7 +34,7 @@ inline char saneChar(unsigned char c)
         return (char)c;
     }
     else {
-        return '?';
+        return '.';
     }
 }
 
