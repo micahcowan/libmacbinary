@@ -67,7 +67,8 @@ void printResFork(unsigned char * mem, size_t sz)
 
     const MacBinary mb(mem, sz);
     const unsigned char *rfs, *rfe;
-    rfs = mb.getResourceFork(&rfe);
+    rfs = mb.getResourceFork();
+    rfe = mb.getResourceForkEnd();
     const ResForkReader rf(rfs, rfe);
 
     cout << "Start of res fork: " << hex << (rf._start() - mem) << endl;
