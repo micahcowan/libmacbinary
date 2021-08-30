@@ -31,6 +31,8 @@ class ResForkReader {
 
         // Various useful locations in a resource fork
         const unsigned char *_start() const { return _data; }
+        const unsigned char *_appDataStart() const { return _data + RF_APP_DATA_OFF; }
+        const unsigned char *_appDataEnd() const { return _appDataStart() + RF_APP_DATA_LENGTH; }
         const unsigned char *_mapStart() const
         {
             return _data + get_be_u32(&_data[RF_F_RES_MAP_OFF]);

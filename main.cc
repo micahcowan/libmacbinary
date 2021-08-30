@@ -72,6 +72,18 @@ void printResFork(unsigned char * mem, size_t sz)
     const ResForkReader rf(rfs, rfe);
 
     cout << "Start of res fork: " << hex << (rf._start() - mem) << endl;
+
+    // Application data
+    const unsigned char *app, *appEnd;
+    app     = rf._appDataStart();
+    appEnd  = rf._appDataEnd();
+    cout << "Application data in resource fork:" << endl;
+    cout << hex;
+    for (const unsigned char *p = app; p != appEnd; ++p) {
+        cout << ' ' << (int)*p;
+    }
+    cout << endl << endl;
+
     cout << "Start of res map: " << hex << (rf._mapStart() - mem) << endl;
     cout << "Start of res type list: " << hex << (rf._typeList() - mem) << endl;
     cout << dec << rf.numTypes() << " items in list:" << endl;

@@ -10,6 +10,9 @@
 #define RF_F_RES_DATA_LENGTH    8u
 #define RF_F_RES_MAP_LENGTH     12u
 
+#define RF_APP_DATA_OFF         128u
+#define RF_APP_DATA_LENGTH      128u
+
 // Resource Map header
 //      16 bytes reserved for copy of resource header
 //      4  bytes reserved for handle of next resource map to search
